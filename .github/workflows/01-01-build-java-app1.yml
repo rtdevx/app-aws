@@ -1,0 +1,44 @@
+name: Build Java App
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Lint
+        run: mvn checkstyle:check
+
+      - name: Test
+        run: mvn test
+
+      - name: Build
+        run: mvn package -DskipTests
+
+      - name: Upload artifact to S3
+        run: aws s3 cp target/myapp.jar s3://rk-artifact/java-app1-${{ github.sha }}.jar
+
+      - name: Update version in SSM
+        run: |
+          aws ssm put-parameter \
+            --name "/java-app1/version" \
+            --value "${{ github.sha }}" \
+            --type String \
+            --overwrite
+
+      - name: Trigger ASG Instance Refresh
+        run: |
+          aws autoscaling start-instance-refresh \
+          --auto-scaling-group-name my_asg \
+          --preferences '{"MinHealthyPercentage": 90}'
