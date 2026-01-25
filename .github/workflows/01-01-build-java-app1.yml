@@ -60,5 +60,5 @@ jobs:
       - name: Trigger ASG Instance Refresh
         run: |
           aws autoscaling start-instance-refresh \
-          --auto-scaling-group-name my_asg \
+          --auto-scaling-group-name Operations-dev-20260125142024879100000008 \
           --preferences '{"MinHealthyPercentage": 90}'
