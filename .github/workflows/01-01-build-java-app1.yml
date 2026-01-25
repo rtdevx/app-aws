@@ -17,6 +17,7 @@ jobs:
           distribution: temurin
           java-version: 17
 
+      # NOTE: Build java-app1
       - name: Lint
         run: mvn checkstyle:check
 
@@ -37,6 +38,7 @@ jobs:
             --type String \
             --overwrite
 
+      # NOTE: Refresh ASG
       - name: Trigger ASG Instance Refresh
         run: |
           aws autoscaling start-instance-refresh \
