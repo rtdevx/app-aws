@@ -8,7 +8,6 @@ permissions:
   id-token: write
   contents: read
 
-
 env:
   WORKDIR: "./java-app1"
 
