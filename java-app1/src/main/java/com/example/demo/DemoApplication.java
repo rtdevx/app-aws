@@ -1,20 +1,32 @@
 package com.example.demo;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+/**
+ * Entry point for the demo application.
+ */
+public final class DemoApplication {
 
-@SpringBootApplication
-@RestController
-public class DemoApplication {
+    /**
+     * Default constructor.
+     */
+    private DemoApplication() {
+        // Prevent instantiation
+    }
 
-    @GetMapping("/")
-    public String home() {
+    /**
+     * Simple home endpoint.
+     *
+     * @return greeting message
+     */
+    public static String home() {
         return "Hello from java-app1! Instance is healthy.";
     }
 
-    public static void main(String[] args) {
-        SpringApplication.run(DemoApplication.class, args);
+    /**
+     * Application entry point.
+     *
+     * @param args command-line arguments
+     */
+    public static void main(final String[] args) {
+        org.springframework.boot.SpringApplication.run(DemoApplication.class, args);
     }
 }
