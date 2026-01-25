@@ -4,6 +4,11 @@ on:
   push:
     branches: [ main ]
 
+permissions:
+  id-token: write
+  contents: read
+
+
 env:
   WORKDIR: "./java-app1"
 
@@ -13,6 +18,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::390157243794:role/tf-core-oidcRole-artifacts
+          aws-region: eu-west-2
 
       - name: Set up JDK
         uses: actions/setup-java@v4
