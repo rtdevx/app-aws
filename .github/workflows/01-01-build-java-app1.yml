@@ -4,6 +4,9 @@ on:
   push:
     branches: [ main ]
 
+env:
+  WORKDIR: "./java-app1"
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,15 +22,19 @@ jobs:
 
       # NOTE: Build java-app1
       - name: Lint
+        working-directory: ${{ env.WORKDIR }}    
         run: mvn checkstyle:check
 
       - name: Test
+        working-directory: ${{ env.WORKDIR }}        
         run: mvn test
 
       - name: Build
+        working-directory: ${{ env.WORKDIR }}
         run: mvn package -DskipTests
 
       - name: Upload artifact to S3
+        working-directory: ${{ env.WORKDIR }}
         run: aws s3 cp target/myapp.jar s3://rk-artifact/java-app1-${{ github.sha }}.jar
 
       - name: Update version in SSM
