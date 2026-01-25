@@ -8,7 +8,7 @@ env:
   WORKDIR: "./java-app1"
 
 jobs:
-  build:
+  java-app1-build:
     runs-on: ubuntu-latest
 
     steps:
