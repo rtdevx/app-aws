@@ -22,7 +22,7 @@ jobs:
       - name: Configure AWS Credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::390157243794:role/tf-core-oidcRole-artifacts
+          role-to-assume: arn:aws:iam::390157243794:role/iac-aws-oidcRole-app-aws-java1-artifacts
           aws-region: eu-west-2
 
       - name: Set up JDK
