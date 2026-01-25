@@ -26,7 +26,7 @@ public final class DemoApplication {
  */
 @GetMapping("/")
 public String home() {
-    String backgroundColor = "#63aecc"; // Change this to test deployments
+    String backgroundColor = "#53a0be"; // Change this to test deployments
     return "<html><body style='background-color:"
             + backgroundColor
             + "; font-family: Arial; padding: 40px;'>"
