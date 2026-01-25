@@ -19,15 +19,20 @@ public final class DemoApplication {
         // Prevent instantiation
     }
 
-    /**
-     * Simple home endpoint.
-     *
-     * @return greeting message
-     */
-    @GetMapping("/")
-    public String home() {
-        return "Hello from java-app1! Instance is healthy.";
-    }
+/**
+ * Simple home endpoint.
+ *
+ * @return HTML page with background color
+ */
+@GetMapping("/")
+public String home() {
+    String backgroundColor = "#87CEEB"; // Change this to test deployments
+    return "<html><body style='background-color:" + backgroundColor + 
+           "; font-family: Arial; padding: 40px;'>" +
+           "<h1>Hello from java-app1!</h1>" +
+           "<p>Instance is healthy and serving dynamic content.</p>" +
+           "</body></html>";
+}
 
     /**
      * Application entry point.
