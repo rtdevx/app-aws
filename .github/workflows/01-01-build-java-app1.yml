@@ -43,6 +43,10 @@ jobs:
         working-directory: ${{ env.WORKDIR }}
         run: mvn package -DskipTests
 
+      - name: Empty S3 bucket from old artifacts # OPTIMIZE: Leave last 5 artifacts for roll back?
+        working-directory: ${{ env.WORKDIR }}
+        run: aws s3 rm s3://rk-artifact --recursive
+     
       - name: Upload artifact to S3
         working-directory: ${{ env.WORKDIR }}
         run: aws s3 cp target/myapp.jar s3://rk-artifact/jvx-${{ github.sha }}.jar
