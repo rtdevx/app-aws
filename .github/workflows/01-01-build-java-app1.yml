@@ -9,10 +9,10 @@ permissions:
   contents: read
 
 env:
-  WORKDIR: "./java-app1"
+  WORKDIR: "./jvx"
 
 jobs:
-  java-app1-build:
+  jvx-build:
     runs-on: ubuntu-latest
 
     steps:
@@ -30,7 +30,7 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      # NOTE: Build java-app1
+      # NOTE: Build jvx
       - name: Lint
         working-directory: ${{ env.WORKDIR }}    
         run: mvn checkstyle:check
@@ -45,12 +45,12 @@ jobs:
 
       - name: Upload artifact to S3
         working-directory: ${{ env.WORKDIR }}
-        run: aws s3 cp target/myapp.jar s3://rk-artifact/java-app1-${{ github.sha }}.jar
+        run: aws s3 cp target/myapp.jar s3://rk-artifact/jvx-${{ github.sha }}.jar
 
       - name: Update version in SSM
         run: |
           aws ssm put-parameter \
-            --name "/java-app1/version" \
+            --name "/jvx/version" \
             --value "${{ github.sha }}" \
             --type String \
             --overwrite
