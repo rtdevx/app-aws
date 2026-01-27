@@ -3,6 +3,11 @@ name: Build Java App
 on:
   push:
     branches: [ main ]
+    inputs:
+      environment:
+        type: string
+        required: true
+        description: "dev | stag | prod"
 
 permissions:
   id-token: write
@@ -60,8 +65,23 @@ jobs:
             --overwrite
 
       # NOTE: Refresh ASG
+      - name: Set ASG name
+        id: asg
+        run: |
+          if [ "${{ github.event.inputs.environment }}" = "dev" ]; then
+            echo "ASG_NAME=Operations_-dev-asg" >> $GITHUB_ENV
+          elif [ "${{ github.event.inputs.environment }}" = "stag" ]; then
+            echo "ASG_NAME=Operations_-stag-asg" >> $GITHUB_ENV
+          elif [ "${{ github.event.inputs.environment }}" = "prod" ]; then
+            echo "ASG_NAME=Operations_-prod-asg" >> $GITHUB_ENV
+          else
+            echo "Unknown environment"
+            exit 1
+          fi
+
+
       - name: Trigger ASG Instance Refresh
         run: |
           aws autoscaling start-instance-refresh \
-          --auto-scaling-group-name Operations-dev-asg \
+          --auto-scaling-group-name $ASG_NAME \
           --preferences '{"MinHealthyPercentage": 90}'
