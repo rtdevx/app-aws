@@ -70,7 +70,7 @@ jobs:
         id: asg
         run: |
           if [ "${{ github.event.inputs.environment }}" = "dev" ]; then
-            echo "ASG_NAME=Operations_-dev-asg" >> $GITHUB_ENV
+            echo "ASG_NAME=Operations-dev-asg" >> $GITHUB_ENV
           elif [ "${{ github.event.inputs.environment }}" = "stag" ]; then
             echo "ASG_NAME=Operations_-stag-asg" >> $GITHUB_ENV
           elif [ "${{ github.event.inputs.environment }}" = "prod" ]; then
