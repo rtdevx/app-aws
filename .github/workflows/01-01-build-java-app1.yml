@@ -1,8 +1,9 @@
 name: Build Java App
 
 on:
-  push:
-    branches: [ main ]
+  workflow_dispatch:
+  #push:    # NOTE: Will not work with inputs. No environment selection would be possible using this method.
+  #  branches: [ main ]
     inputs:
       environment:
         type: string
