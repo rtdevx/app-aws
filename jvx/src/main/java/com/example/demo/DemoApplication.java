@@ -2,13 +2,11 @@ package com.example.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
 
 /**
  * Entry point for the demo application.
  */
 @SpringBootApplication
-@ComponentScan("com.example.demo")
 @SuppressWarnings("checkstyle:FinalClass")
 public class DemoApplication {
 
@@ -18,6 +16,8 @@ public class DemoApplication {
      * @param args command-line arguments
      */
     public static void main(final String[] args) {
-        SpringApplication.run(DemoApplication.class, args);
+        SpringApplication app = new SpringApplication(DemoApplication.class);
+        app.setAdditionalProfiles("debug");
+        app.run(args);
     }
 }
