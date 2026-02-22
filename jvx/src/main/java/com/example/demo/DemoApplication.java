@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @SpringBootApplication
 @RestController
-public final class DemoApplication {
+public class DemoApplication {
 
     /**
      * Default constructor.
