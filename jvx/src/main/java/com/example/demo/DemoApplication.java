@@ -16,7 +16,7 @@ public class DemoApplication {
     /**
      * Default constructor.
      */
-    private DemoApplication() {
+    public DemoApplication() {
         // Prevent instantiation
     }
 
