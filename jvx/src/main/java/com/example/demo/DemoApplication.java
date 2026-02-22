@@ -3,6 +3,7 @@ package com.example.demo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @SpringBootApplication
 @RestController
+@RequestMapping("/")
 @SuppressWarnings("checkstyle:FinalClass")
 public class DemoApplication {
 
@@ -20,21 +22,21 @@ public class DemoApplication {
         // Prevent instantiation
     }
 
-/**
- * Simple home endpoint.
- *
- * @return HTML page with background color
- */
-@GetMapping("/")
-public String home() {
-    String backgroundColor = "#2ca1cf"; // Change this to test deployments
-    return "<html><body style='background-color:"
-            + backgroundColor
-            + "; font-family: Arial; padding: 40px;'>"
-            + "<h1>Hello from java-app1!</h1>"
-            + "<p>Instance is healthy and serving dynamic content.</p>"
-            + "</body></html>";
-}
+    /**
+     * Simple home endpoint.
+     *
+     * @return HTML page with background color
+     */
+    @GetMapping("")
+    public String home() {
+        String backgroundColor = "#2ca1cf"; // Change this to test deployments
+        return "<html><body style='background-color:"
+                + backgroundColor
+                + "; font-family: Arial; padding: 40px;'>"
+                + "<h1>Hello from java-app1!</h1>"
+                + "<p>Instance is healthy and serving dynamic content.</p>"
+                + "</body></html>";
+    }
 
     /**
      * Application entry point.
