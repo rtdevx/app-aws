@@ -51,9 +51,9 @@ jobs:
         run: mvn package -DskipTests
 
       # INFO: Cleanup S3 bucket from old artifacts
-      - name: Keep last 5 artifacts
+      - name: Keep last N artifacts
         run: |
-          aws s3 ls s3://rk-artifact/ | sort | head -n -5 | awk '{print $4}' | while read f; do
+          aws s3 ls s3://rk-artifact/ | sort | head -n -3 | awk '{print $4}' | while read f; do
             aws s3 rm s3://rk-artifact/$f
           done
 
