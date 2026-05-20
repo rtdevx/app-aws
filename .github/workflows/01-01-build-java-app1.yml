@@ -81,7 +81,7 @@ jobs:
             --type String \
             --overwrite
 
-      # INFO: Auto Scaling Group
+      # INFO: Health‑gated ASG refresh
       - name: Set ASG name
         id: asg
         run: |
@@ -101,3 +101,51 @@ jobs:
           aws autoscaling start-instance-refresh \
           --auto-scaling-group-name $ASG_NAME \
           --preferences '{"MinHealthyPercentage": 90}'
+
+      - name: Wait for ASG refresh to complete
+        run: |
+          REFRESH_ID=$(aws autoscaling describe-instance-refreshes \
+            --auto-scaling-group-name $ASG_NAME \
+            --query "InstanceRefreshes[0].InstanceRefreshId" \
+            --output text)
+
+          echo "Waiting for refresh $REFRESH_ID"
+
+          while true; do
+            STATUS=$(aws autoscaling describe-instance-refreshes \
+              --auto-scaling-group-name $ASG_NAME \
+              --instance-refresh-ids $REFRESH_ID \
+              --query "InstanceRefreshes[0].Status" \
+              --output text)
+
+            echo "Status: $STATUS"
+
+            if [ "$STATUS" = "Successful" ]; then
+              exit 0
+            fi
+
+            if [ "$STATUS" = "Failed" ] || [ "$STATUS" = "Cancelled" ]; then
+              echo "Instance refresh failed"
+              exit 1
+            fi
+
+            sleep 15
+          done
+
+      # INFO: Automatic rollback on failed deployment
+      - name: Rollback to previous version
+        if: failure()
+        run: |
+          PREV=$(aws ssm get-parameter --name "/jvx/version_previous" --query "Parameter.Value" --output text)
+
+          echo "Rolling back to $PREV"
+
+          aws ssm put-parameter \
+            --name "/jvx/version" \
+            --value "$PREV" \
+            --type String \
+            --overwrite
+
+          aws autoscaling start-instance-refresh \
+            --auto-scaling-group-name $ASG_NAME \
+            --preferences '{"MinHealthyPercentage": 90}'
