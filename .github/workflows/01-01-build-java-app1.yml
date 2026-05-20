@@ -63,6 +63,16 @@ jobs:
         run: aws s3 cp target/myapp.jar s3://rk-artifact/jvx-${{ github.sha }}.jar
 
       # INFO: Update SSM
+
+      - name: Backup previous version
+        run: |
+          PREV=$(aws ssm get-parameter --name "/jvx/version" --query "Parameter.Value" --output text || echo "none")
+          aws ssm put-parameter \
+            --name "/jvx/version_previous" \
+            --value "$PREV" \
+            --type String \
+            --overwrite
+
       - name: Update version in SSM
         run: |
           aws ssm put-parameter \
