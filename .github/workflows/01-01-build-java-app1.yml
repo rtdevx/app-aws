@@ -22,6 +22,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # INFO: Prereq
       - uses: actions/checkout@v6
 
       - name: Configure AWS Credentials (OIDC)
@@ -36,7 +37,7 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      # NOTE: Build jvx
+      # INFO: Build jvx
       - name: Lint
         working-directory: ${{ env.WORKDIR }}    
         run: mvn checkstyle:check
@@ -49,14 +50,19 @@ jobs:
         working-directory: ${{ env.WORKDIR }}
         run: mvn package -DskipTests
 
-      - name: Empty S3 bucket from old artifacts # OPTIMIZE: Leave last 5 artifacts for roll back?
-        working-directory: ${{ env.WORKDIR }}
-        run: aws s3 rm s3://rk-artifact --recursive
-     
+      # INFO: Cleanup S3 bucket from old artifacts
+      - name: Keep last 5 artifacts
+        run: |
+          aws s3 ls s3://rk-artifact/ | sort | head -n -5 | awk '{print $4}' | while read f; do
+            aws s3 rm s3://rk-artifact/$f
+          done
+
+      # INFO: Upload newly build artifact
       - name: Upload artifact to S3
         working-directory: ${{ env.WORKDIR }}
         run: aws s3 cp target/myapp.jar s3://rk-artifact/jvx-${{ github.sha }}.jar
 
+      # INFO: Update SSM
       - name: Update version in SSM
         run: |
           aws ssm put-parameter \
@@ -65,7 +71,7 @@ jobs:
             --type String \
             --overwrite
 
-      # NOTE: Refresh ASG
+      # INFO: Auto Scaling Group
       - name: Set ASG name
         id: asg
         run: |
@@ -79,7 +85,6 @@ jobs:
             echo "Unknown environment"
             exit 1
           fi
-
 
       - name: Trigger ASG Instance Refresh
         run: |
