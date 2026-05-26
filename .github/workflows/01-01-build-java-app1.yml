@@ -15,6 +15,8 @@ permissions:
   contents: read
 
 env:
+  AWS_ACCOUNT_ID: 390157243794
+  AWS_REGION: eu-west-2
   WORKDIR: "./jvx"
 
 jobs:
@@ -28,8 +30,8 @@ jobs:
       - name: Configure AWS Credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v6
         with:
-          role-to-assume: arn:aws:iam::390157243794:role/iac-aws-oidcRole-app-jvx
-          aws-region: eu-west-2
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/iac-aws-oidcRole-app-jvx
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Set up JDK
         uses: actions/setup-java@v5
@@ -149,3 +151,10 @@ jobs:
           aws autoscaling start-instance-refresh \
             --auto-scaling-group-name $ASG_NAME \
             --preferences '{"MinHealthyPercentage": 90}'
+
+      # INFO: Add Deployment summary to GitHub Actions
+      - name: Deployment summary
+        run: |
+          echo "Environment: ${{ github.event.inputs.environment }}"
+          echo "Version deployed: ${{ github.sha }}"
+          echo "Previous version: $(aws ssm get-parameter --name "/jvx/version_previous" --query "Parameter.Value" --output text)"
