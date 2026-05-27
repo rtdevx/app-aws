@@ -150,7 +150,7 @@ jobs:
 
           aws autoscaling start-instance-refresh \
             --auto-scaling-group-name $ASG_NAME \
-            --preferences '{"MinHealthyPercentage": 50}'
+            --preferences '{"MinHealthyPercentage": 150}'
 
       # INFO: Add Deployment summary to GitHub Actions
       - name: Deployment summary

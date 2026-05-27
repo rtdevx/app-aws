@@ -16,7 +16,7 @@ public class HomeController {
      */
     @GetMapping("/")
     public String home() {
-        String backgroundColor = "#1d20de";
+        String backgroundColor = "#1dde5d";
         return "<html><body style='background-color:"
                 + backgroundColor
                 + "; font-family: Arial; padding: 40px;'>"
