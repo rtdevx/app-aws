@@ -6,9 +6,15 @@ on:
   #  branches: [ main ]
     inputs:
       environment:
-        type: string
+        #type: string
+        #required: true
+        #description: "dev | stag | prod"
         required: true
-        description: "dev | stag | prod"
+        type: choice
+        options:
+          - dev
+          - stag
+          - prod
 
 permissions:
   id-token: write
