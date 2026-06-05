@@ -15,6 +15,14 @@ on:
           - dev
           - stag
           - prod
+      aws_region:
+        description: "Select AWS Region"
+        required: true
+        type: choice
+        options:
+          - eu-west-2
+          - eu-west-1
+          - eu-central-1          
 
 permissions:
   id-token: write
@@ -22,7 +30,7 @@ permissions:
 
 env:
   AWS_ACCOUNT_ID: 390157243794
-  AWS_REGION: eu-west-2
+  #AWS_REGION: eu-west-2
   WORKDIR: "./jvx"
 
 jobs:
@@ -37,7 +45,8 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/iac-aws-oidcRole-app-jvx
-          aws-region: ${{ env.AWS_REGION }}
+          #aws-region: ${{ env.AWS_REGION }}
+          aws-region: ${{ inputs.environment }}
 
       - name: Set up JDK
         uses: actions/setup-java@v5
